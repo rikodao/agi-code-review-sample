@@ -26,6 +26,7 @@ def prehookForDebug(event, context):
 
 
 def getCode(bucket, key):
+    s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=bucket, Key=key)
     
     # オブジェクトのボディ(中身)を文字列として取得
