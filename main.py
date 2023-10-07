@@ -47,7 +47,8 @@ def lambda_handler(event, context):
     print(response_body)
     completion = response_body.get("completion")
     
-    return json.dumps(response_body, indent=2)
+    
+    return completion.encode('utf-8')
 
 def prehook(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
