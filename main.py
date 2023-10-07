@@ -45,12 +45,27 @@ def lambda_handler(event, context):
     response_body = json.loads(response.get('body').read())
     # text
     print(response_body)
+    
     completion = response_body.get("completion")
+    sendMessage(completion, key)
     
     
-    return json.dumps(response_body, indent=2)
+    # return json.dumps(response_body, indent=2)
 
 def prehook(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
     print('boto3 vertion: {0}'.format(boto3.__version__))
     print("Received event: " + json.dumps(event, indent=2))
+
+def sendMessage(title, message):
+    sns = boto3.client('sns')
+
+    topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
+    
+    response = sns.publish(
+      TopicArn=topic_arn,    
+      Message=message,
+      Subject= title+ ' のcode reviewやで'
+    )
+    
+    print(response['MessageId'])
