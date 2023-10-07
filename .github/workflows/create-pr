@@ -1,0 +1,44 @@
+name: run-actions-using-diff-files
+
+on:
+  pull_request:
+    types: [opened]
+
+env:
+  base_branch: main
+  diff_path: 'docs/**.md'
+
+jobs:
+  run-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Switch to pull request branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Fetch base branch
+        run: git fetch origin ${base_branch}:${base_branch}
+
+      - name: Run actions using diff_files
+        run: |
+          diffs=$(git diff  HEAD ${base_branch} -- "${diff_path}" \
+            | tr "\n" " ")
+          echo "# diffs: ${diffs}"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Download file from S3
+        env: 
+          S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
+        run: |
+          aws bedrock-runtime invoke-model \
+          --model-id anthropic.claude-v2 \
+          --body "{ \"prompt\": \"\\n\\nHuman: diff見てPR コメント作ってください。 ${diffs} \\n\\nAssistant:\"}" 
+
+
+          
