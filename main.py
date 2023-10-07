@@ -58,21 +58,21 @@ def prehook(event, context):
     print("Received event: " + json.dumps(event, indent=2))
 
 def sendSNSTopicMessage(title, message):
-    sns = boto3.client('sns')
-    topicArn = '000000000000000000000000000000000000000:lambda-review'
-    message= {
-            'Title': title,
-            'Message': message
-            }
-    sns.publish(TopicArn=topicArn, Subject=title, Message=message)
     # sns = boto3.client('sns')
+    # topicArn = '000000000000000000000000000000000000000:lambda-review'
+    # message= {
+    #         'Title': title,
+    #         'Message': message
+    #         }
+    # sns.publish(TopicArn=topicArn, Subject=title, Message=message)
+    sns = boto3.client('sns')
 
-    # topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
+    topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
     
-    # response = sns.publish(
-    #   TopicArn=topic_arn,    
-    #   Message=message,
-    #   Subject= title+ ' のcode reviewやで'
-    # )
+    response = sns.publish(
+      TopicArn=topic_arn,    
+      Message=message,
+      Subject= title+ ' のcode reviewやで'
+    )
     
-    # print(response['MessageId'])
+    print(response['MessageId'])
