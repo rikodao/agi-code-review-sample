@@ -72,7 +72,5 @@ def sendSNSTopicMessage(title, message):
     response = sns.publish(
       TopicArn=topic_arn,    
       Message=message,
-      Subject= title+ ' のcode reviewやで'
     )
     
-    print(response['MessageId'])
