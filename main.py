@@ -7,7 +7,7 @@ print('boto3 vertion: {0}'.format(boto3.__version__))
 
 bedrock_runtime = boto3.client('bedrock-runtime')
 # bedrock_runtime = boto3.client(service_name='bedrock-runtime')
-# test2
+# test3
 
 def lambda_handler(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
