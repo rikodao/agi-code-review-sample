@@ -2,7 +2,7 @@ name: run-actions-using-diff-files
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened,reopened]
 
 env:
   base_branch: main
@@ -38,7 +38,7 @@ jobs:
         run: |
           aws bedrock-runtime invoke-model \
           --model-id anthropic.claude-v2 \
-          --body "{ \"prompt\": \"\\n\\nHuman: diff見てPR コメント作ってください。 ${diffs} \\n\\nAssistant:\"}" 
+          --body "{ \"prompt\": \"\\n\\nHuman: diff見てPR コメント作ってください。 ${diffs} \\n\\nAssistant:\"}" output.txt
 
 
           
