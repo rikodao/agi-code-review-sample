@@ -47,7 +47,7 @@ def lambda_handler(event, context):
     print(response_body)
     
     completion = response_body.get("completion")
-    sendSNSTopicMessage(completion, key)
+    sendSNSTopicMessage(completion)
     
     
     # return json.dumps(response_body, indent=2)
@@ -57,7 +57,7 @@ def prehook(event, context):
     print('boto3 vertion: {0}'.format(boto3.__version__))
     print("Received event: " + json.dumps(event, indent=2))
 
-def sendSNSTopicMessage(title, message):
+def sendSNSTopicMessage(message):
     # sns = boto3.client('sns')
     # topicArn = '000000000000000000000000000000000000000:lambda-review'
     message= {
