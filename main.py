@@ -60,10 +60,10 @@ def prehook(event, context):
 def sendSNSTopicMessage(title, message):
     # sns = boto3.client('sns')
     # topicArn = '000000000000000000000000000000000000000:lambda-review'
-    # message= {
-    #         'Title': title,
-    #         'Message': message
-    #         }
+    message= {
+            'Title': title,
+            'Message': message
+            }
     # sns.publish(TopicArn=topicArn, Subject=title, Message=message)
     sns = boto3.client('sns')
 
