@@ -31,7 +31,7 @@ def lambda_handler(event, context):
     contentType = 'application/json'
 
     def prompt(text):
-        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]の観点で、10年来の友達のように正直にレビューしてください。\n' + text + '\n\nAssistant:'
+        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]の観点で、レビューしてください。\n' + text + '\n\nAssistant:'
     
     body = json.dumps({
         "prompt": prompt(text),
@@ -48,7 +48,7 @@ def lambda_handler(event, context):
     completion = response_body.get("completion")
     
     
-    return completion.encode('utf-8')
+    return json.dumps(response_body, indent=2)
 
 def prehook(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
