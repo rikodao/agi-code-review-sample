@@ -31,7 +31,7 @@ def lambda_handler(event, context):
     contentType = 'application/json'
 
     def prompt(text):
-        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]の観点で、レビューしてください。\n' + text + '\n\nAssistant:'
+        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]の観点で、10年来の友達のように正直にレビューしてください。\n' + text + '\n\nAssistant:'
     
     body = json.dumps({
         "prompt": prompt(text),
