@@ -8,9 +8,7 @@ bedrock_runtime = boto3.client('bedrock-runtime')
 
 
 def lambda_handler(event, context):
-    print('botocore vertion: {0}'.format(botocore.__version__))
-    print('boto3 vertion: {0}'.format(boto3.__version__))
-    print("Received event: " + json.dumps(event, indent=2))
+    prehook(event, context)
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     
@@ -47,3 +45,8 @@ def lambda_handler(event, context):
     print(response_body)
     completion = response_body.get("completion")
     return completion
+
+def prehook(event, context):
+    print('botocore vertion: {0}'.format(botocore.__version__))
+    print('boto3 vertion: {0}'.format(boto3.__version__))
+    print("Received event: " + json.dumps(event, indent=2))
