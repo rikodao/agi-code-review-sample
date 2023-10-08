@@ -16,8 +16,6 @@ def lambda_handler(event, context):
     completion = codeReviewWithBedrock(text)
     sendSNSTopicMessage(completion)
     
-    
-    # return json.dumps(response_body, indent=2)
 
 def prehookForDebug(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
@@ -53,7 +51,6 @@ def codeReviewWithBedrock(code):
     # APIレスポンスからBODYを取り出す
     response = bedrock_runtime.invoke_model(body=body, modelId=modelId, accept=accept, contentType=contentType)
     response_body = json.loads(response.get('body').read())
-    # text
     print(response_body)
     
     completion = response_body.get("completion")
@@ -63,7 +60,6 @@ def sendSNSTopicMessage(message):
     # sns = boto3.client('sns')
     # topicArn = '000000000000000000000000000000000000000:lambda-review'
     message= message
-    # sns.publish(TopicArn=topicArn, Subject=title, Message=message)
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
