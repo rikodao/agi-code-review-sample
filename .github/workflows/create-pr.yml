@@ -1,5 +1,5 @@
 name: run-actions-using-diff-files
-
+run-name: プルリクメッセージ生成 Action 🚀
 on:
   pull_request:
     types: [opened,reopened]
