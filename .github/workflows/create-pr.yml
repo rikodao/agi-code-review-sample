@@ -64,5 +64,5 @@ jobs:
           DESCRIPTION: ${{ steps.invoke-model-output.outputs.DESCRIPTION }}
         run: |
           DESCRIPTION_TEXT=$(echo $DESCRIPTION)
-          gh pr edit ${{ github.event.pull_request.number }} --body "$DESCRIPTION_TEXT
+          gh pr edit ${{ github.event.pull_request.number }} --body "${DESCRIPTION_TEXT}"
            
