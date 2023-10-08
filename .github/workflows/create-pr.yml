@@ -57,11 +57,11 @@ jobs:
           echo  'DESCRIPTION<<EOF'  >> "$GITHUB_OUTPUT"
           echo "${description}"  >> "$GITHUB_OUTPUT"
           echo 'EOF' >> "$GITHUB_OUTPUT"
-           
 
-      - uses: riskledger/update-pr-description@v2
+      - name: URL to Pull Request description
         env:
           DESCRIPTION: ${{ steps.invoke-model-output.outputs.DESCRIPTION }}
-        with:
-          body: (${DESCRIPTION})
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DESCRIPTION_TEXT=$(echo $DESCRIPTION)
+          gh pr edit ${{ github.event.pull_request.number }} --body "$DESCRIPTION_TEXT
+           
