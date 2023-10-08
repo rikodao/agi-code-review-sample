@@ -52,7 +52,7 @@ jobs:
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
           cat invoke-model-output.txt
-          description=$(cat invoke-model-output.txt)
+          description=$(cat invoke-model-output.txt | jq -r .completion)
           echo "DESCRIPTION=${description}" >> $GITHUB_OUTPUT
 
 
