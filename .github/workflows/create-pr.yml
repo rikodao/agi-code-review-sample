@@ -55,7 +55,6 @@ jobs:
           description=$(cat invoke-model-output.txt | jq -r .completion)
           echo "DESCRIPTION=${description}" >> $GITHUB_OUTPUT
 
-
       - uses: riskledger/update-pr-description@v2
         env:
           DESCRIPTION: ${{ steps.invoke-model-output.outputs.DESCRIPTION }}
