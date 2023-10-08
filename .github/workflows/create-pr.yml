@@ -63,5 +63,5 @@ jobs:
         env:
           DESCRIPTION: ${{ steps.invoke-model-output.outputs.DESCRIPTION }}
         with:
-          body: ${DESCRIPTION}
+          body: (${DESCRIPTION})
           token: ${{ secrets.GITHUB_TOKEN }}
