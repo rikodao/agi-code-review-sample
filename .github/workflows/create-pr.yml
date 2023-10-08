@@ -6,7 +6,7 @@ on:
 
 env:
   base_branch: main
-  diff_path: 'docs/**.md'
+  diff_path: '**.py'
 
 jobs:
   run-actions:
