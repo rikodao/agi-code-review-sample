@@ -22,7 +22,7 @@ jobs:
 
       - name: Run actions using diff_files
         run: |
-          diffs=$(git diff  HEAD ${base_branch} -- "${diff_path}" \
+          diffs=$(git diff  origin/${{ github.event.pull_request.base.ref }}..${{ github.sha }} -- "${diff_path}" \
             | tr "\n" " ")
           echo "# diffs: ${diffs}"
       - id: install-aws-cli
