@@ -43,7 +43,7 @@ jobs:
           aws bedrock-runtime invoke-model \
           --model-id anthropic.claude-v2 \
           --body "{\"prompt\": \"\n\nHuman:以下のdiffを見て、プルリクエストコメントを作成して。:${diffs} \n\nAssistant:\", \"max_tokens_to_sample\":300}" invoke-model-output.txt
-      - name: Download file from S3
+      - name: cat invoke-model-output.txt
         env: 
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
