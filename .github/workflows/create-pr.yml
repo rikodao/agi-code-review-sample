@@ -58,5 +58,5 @@ jobs:
         env:
           DESCRIPTION: ${{ steps.random-color-generator.outputs.DESCRIPTION }}
         with:
-          body: "${DESCRIPTION}"
+          body: ${{DESCRIPTION}}
           token: ${{ secrets.GITHUB_TOKEN }}
