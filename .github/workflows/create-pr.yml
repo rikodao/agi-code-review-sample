@@ -48,7 +48,9 @@ jobs:
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
           cat invoke-model-output.txt
-      - uses: riskledger/update-pr-description@dev
+      - name: update-pull-request
+        uses: kt3k/update-pr-description@v2
         with:
-          body: $(cat invoke-model-output.txt)
-          token: ${{ secrets.GITHUB_TOKEN }}
+          pr_body: $(cat invoke-model-output.txt)
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        
