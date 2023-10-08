@@ -25,6 +25,7 @@ jobs:
           diffs=$(git diff  HEAD ${base_branch} -- "${diff_path}" \
             | tr "\n" " ")
           echo "# diffs: ${diffs}"
+          echo "DIFFS=${diffs}" >> $GITHUB_OUTPUT
       - id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
         with:
@@ -39,19 +40,23 @@ jobs:
       - name: generate pr description
         env: 
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
+          DIFFS: ${{ steps.random-color-generator.outputs.DIFFS }}
         run: |
           aws bedrock-runtime invoke-model \
           --model-id anthropic.claude-v2 \
-          --body "{\"prompt\": \"\n\nHuman:以下のdiffを見て、プルリクエストのdescriptionをそのまま貼れる文言で作成して。:${diffs} :サンプルとなる出力はこれをみてね。：## やったこと\n\n* このプルリクで何をしたのか？\n\n## やらないこと\n\n* このプルリクでやらないことは何か？（あれば。無いなら「無し」でOK）（やらない場合は、いつやるのかを明記する。）\n\n## できるようになること（ユーザ目線）\n\n* 何ができるようになるのか？（あれば。無いなら「無し」でOK）\n\n## できなくなること（ユーザ目線）\n\n* 何ができなくなるのか？（あれば。無いなら「無し」でOK）\n\n## 動作確認\n\n* レビュワーへの参考情報（実装上の懸念点や注意点などあれば記載） \n\nAssistant:\", \"max_tokens_to_sample\":300}" invoke-model-output.txt
+          --body "{\"prompt\": \"\n\nHuman:以下のdiffを見て、プルリクエストのdescriptionをそのまま貼れる文言で作成して。:${DIFFS} :サンプルとなる出力はこれをみてね。：## やったこと\n\n* このプルリクで何をしたのか？\n\n## やらないこと\n\n* このプルリクでやらないことは何か？（あれば。無いなら「無し」でOK）（やらない場合は、いつやるのかを明記する。）\n\n## できるようになること（ユーザ目線）\n\n* 何ができるようになるのか？（あれば。無いなら「無し」でOK）\n\n## できなくなること（ユーザ目線）\n\n* 何ができなくなるのか？（あれば。無いなら「無し」でOK）\n\n## 動作確認\n\n* レビュワーへの参考情報（実装上の懸念点や注意点などあれば記載） \n\nAssistant:\", \"max_tokens_to_sample\":300}" invoke-model-output.txt
       - name: cat invoke-model-output.txt
         env: 
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
           cat invoke-model-output.txt
           description=$(cat invoke-model-output.txt)
+          echo "DESCRIPTION=${description}" >> $GITHUB_OUTPUT
 
 
       - uses: riskledger/update-pr-description@v2
+        env:
+          DESCRIPTION: ${{ steps.random-color-generator.outputs.DESCRIPTION }}
         with:
-          body: "${description}"
+          body: "${DESCRIPTION}"
           token: ${{ secrets.GITHUB_TOKEN }}
