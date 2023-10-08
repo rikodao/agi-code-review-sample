@@ -53,5 +53,5 @@ jobs:
 
       - uses: riskledger/update-pr-description@v2
         with:
-          body: ${description}
+          body: "${description}"
           token: ${{ secrets.GITHUB_TOKEN }}
