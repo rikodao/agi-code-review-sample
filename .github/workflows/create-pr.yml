@@ -53,11 +53,11 @@ jobs:
         run: |
           cat invoke-model-output.txt
           description=$(cat invoke-model-output.txt | jq -r .completion)
-          {
-            echo "DESCRIPTION<<EOF"
-            ${description}" 
-            echo EOF
-          } >> $GITHUB_OUTPUT
+          
+          echo  'DESCRIPTION<<EOF'  >> $GITHUB_OUTPUT
+          ${description}"  >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+           
 
       - uses: riskledger/update-pr-description@v2
         env:
