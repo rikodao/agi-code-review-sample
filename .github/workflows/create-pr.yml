@@ -55,7 +55,7 @@ jobs:
           description=$(cat invoke-model-output.txt | jq -r .completion)
           
           echo  'DESCRIPTION<<EOF'  >> $GITHUB_OUTPUT
-          ${description}"  >> $GITHUB_OUTPUT
+          echo ${description}"  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
            
 
