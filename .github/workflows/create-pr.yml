@@ -49,9 +49,8 @@ jobs:
         run: |
           cat invoke-model-output.txt
 
-      - name: update-pull-request
-        uses: nefrob/pr-description@v1.1.0
+
+      - uses: riskledger/update-pr-description@v2
         with:
-          content: $(cat invoke-model-output.txt)
+          body: $(cat invoke-model-output.txt)
           token: ${{ secrets.GITHUB_TOKEN }}
-          
