@@ -36,7 +36,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Download file from S3
+      - name: generate pr description
         env: 
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
@@ -48,9 +48,10 @@ jobs:
           S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
         run: |
           cat invoke-model-output.txt
+
       - name: update-pull-request
-        uses: kt3k/update-pr-description@v2
+        uses: nefrob/pr-description@v1.1.0
         with:
-          pr_body: $(cat invoke-model-output.txt)
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-        
+          content: $(cat invoke-model-output.txt)
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
