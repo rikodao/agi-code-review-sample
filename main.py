@@ -31,7 +31,7 @@ def getCode(bucket, key):
     text = obj['Body'].read().decode('utf-8') 
     return text 
 
-    
+# Claude で codeReviewしてくれる関数
 def codeReviewWithBedrock(code):
     bedrock_runtime = boto3.client('bedrock-runtime')
     modelId = 'anthropic.claude-v2'
@@ -57,7 +57,7 @@ def codeReviewWithBedrock(code):
     return completion
 
 def sendSNSTopicMessage(message):
-    # sns = boto3.client('sns')
+    sns = boto3.client('sns')
     # topicArn = '000000000000000000000000000000000000000:lambda-review'
     message= message
     sns = boto3.client('sns')
