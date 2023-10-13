@@ -7,7 +7,6 @@ s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
     prehookForDebug(event, context)
-    
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     
@@ -16,6 +15,8 @@ def lambda_handler(event, context):
     completion = codeReviewWithBedrock(text)
     sendSNSTopicMessage(completion)
     
+    
+    # return json.dumps(response_body, indent=2)
 
 def prehookForDebug(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
@@ -31,7 +32,7 @@ def getCode(bucket, key):
     text = obj['Body'].read().decode('utf-8') 
     return text 
 
-# Claude で codeReviewしてくれる関数
+    
 def codeReviewWithBedrock(code):
     bedrock_runtime = boto3.client('bedrock-runtime')
     modelId = 'anthropic.claude-v2'
@@ -51,20 +52,22 @@ def codeReviewWithBedrock(code):
     # APIレスポンスからBODYを取り出す
     response = bedrock_runtime.invoke_model(body=body, modelId=modelId, accept=accept, contentType=contentType)
     response_body = json.loads(response.get('body').read())
+    # text
     print(response_body)
     
     completion = response_body.get("completion")
     return completion
 
 def sendSNSTopicMessage(message):
-    sns = boto3.client('sns')
+    # sns = boto3.client('sns')
     # topicArn = '000000000000000000000000000000000000000:lambda-review'
     message= message
+    # sns.publish(TopicArn=topicArn, Subject=title, Message=message)
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
     
     response = sns.publish(
       TopicArn=topic_arn,    
-      Message=message,
-    )
+      Message='{"version": "1.0","source": "custom","content": {"description": '+message+'"}}'
+     )
