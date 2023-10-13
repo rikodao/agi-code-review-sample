@@ -66,8 +66,9 @@ def sendSNSTopicMessage(message):
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
+    Message = {"version": "1.0","source": "custom","content": {"description": repr(message)}}
     
     response = sns.publish(
       TopicArn=topic_arn,    
-      Message='{"version": "1.0","source": "custom","content": {"description": '+repr(message)+'"}}'
+      Message=Message
      )
