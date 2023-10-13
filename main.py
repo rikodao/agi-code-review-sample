@@ -69,5 +69,5 @@ def sendSNSTopicMessage(message):
     
     response = sns.publish(
       TopicArn=topic_arn,    
-      Message='{"version": "1.0","source": "custom","content": {"description": '+message+'"}}'
+      Message='{"version": "1.0","source": "custom","content": {"description": '+repr(message)+'"}}'
      )
