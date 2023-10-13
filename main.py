@@ -16,7 +16,10 @@ def lambda_handler(event, context):
     sendSNSTopicMessage(completion)
     
     
-    # return json.dumps(response_body, indent=2)
+    return {
+        'statusCode': 200,
+        'body': json.dumps('OK!')
+    }
 
 def prehookForDebug(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
@@ -40,7 +43,7 @@ def codeReviewWithBedrock(code):
     contentType = 'application/json'
 
     def prompt(text):
-        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]の観点で、10年来の友達として関西弁で正直にレビューしてな。\n' + text + '\n\nAssistant:'
+        return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]、[エラーハンドリングの正しさ]の観点で、10年来の友達として関西弁で正直にレビューしてな。\n' + text + '\n\nAssistant:'
     
     body = json.dumps({
         "prompt": prompt(code),
@@ -66,9 +69,9 @@ def sendSNSTopicMessage(message):
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
-    Message = {"version": "1.0","source": "custom","content": {"description": repr(message)}}
+    Message = {"version": "1.0","source": "custom","content": {"description": message}}
     
     response = sns.publish(
       TopicArn=topic_arn,    
-      Message=Message
+      Message=json.dumps(Message)
      )
