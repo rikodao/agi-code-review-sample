@@ -26,7 +26,7 @@ def prehookForDebug(event, context):
     print('boto3 vertion: {0}'.format(boto3.__version__))
     print("Received event: " + json.dumps(event, indent=2))
 
-
+# オブジェクトのボディ(中身)を文字列として取得
 def getCode(bucket, key):
     s3 = boto3.client('s3')
     obj = s3.get_object(Bucket=bucket, Key=key)
