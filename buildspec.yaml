@@ -3,6 +3,8 @@ env:
   secrets-manager:
     DOCKERHUB_USER: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:username
     DOCKERHUB_PASS: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:password
+    AWS_ACCESS_KEY_ID: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:accesskey
+    AWS_SECRET_ACCESS_KEY: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:secret
 
 phases:
   pre_build:
@@ -17,5 +19,6 @@ phases:
             args: --size-only --include "*.py" 
           env:
             AWS_S3_BUCKET: "agi-dev-sample-code-bucket-us-east-1-naotoiso"
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            secrets-manager: 
+                AWS_ACCESS_KEY_ID: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:accesskey
+                AWS_SECRET_ACCESS_KEY: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:secret
