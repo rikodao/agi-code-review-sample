@@ -1,6 +1,15 @@
 version: 0.2
+env:
+  secrets-manager:
+    DOCKERHUB_USER: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:username
+    DOCKERHUB_PASS: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:password
 
 phases:
+  pre_build:
+    commands:
+      # Docker Hub へのログイン
+      - echo Logging in to Docker Hub...
+      - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
   build:
     steps:
         - uses: jakejarvis/s3-sync-action@master
