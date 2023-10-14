@@ -61,10 +61,7 @@ def codeReviewWithBedrock(code):
     return completion
 
 def sendSNSTopicMessage(message):
-    # sns = boto3.client('sns')
-    # topicArn = '000000000000000000000000000000000000000:lambda-review'
     message= message
-    # sns.publish(TopicArn=topicArn, Subject=title, Message=message)
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 

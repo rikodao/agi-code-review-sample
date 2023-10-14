@@ -20,5 +20,5 @@ phases:
             args: --size-only --include "*.py" 
           env:
             AWS_S3_BUCKET: "agi-dev-sample-code-bucket-us-east-1-naotoiso"
-            DEST_DIR: src
+            DEST_DIR: "src"
             
