@@ -19,6 +19,4 @@ phases:
             args: --size-only --include "*.py" 
           env:
             AWS_S3_BUCKET: "agi-dev-sample-code-bucket-us-east-1-naotoiso"
-            secrets-manager: 
-                AWS_ACCESS_KEY_ID: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:accesskey
-                AWS_SECRET_ACCESS_KEY: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:secret
+            
