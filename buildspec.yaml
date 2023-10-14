@@ -3,7 +3,6 @@ version: 0.2
 phases:
   build:
     steps:
-        - uses: actions/checkout@master
         - uses: jakejarvis/s3-sync-action@master
           with:
             args: --size-only --include "*.py" 
