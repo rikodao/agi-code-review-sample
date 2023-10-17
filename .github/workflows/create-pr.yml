@@ -1,0 +1,68 @@
+name: run-actions-using-diff-files
+run-name: プルリクメッセージ生成 Action 🚀
+on:
+  pull_request:
+    types: [opened,reopened]
+
+env:
+  base_branch: main
+  diff_path: '**.py'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  run-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Switch to pull request branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Fetch base branch
+        run: git fetch origin ${base_branch}:${base_branch}
+
+      - name: Run actions using diff_files
+        id: git-diff
+        run: |
+          diffs=$(git diff  HEAD ${base_branch} -- "${diff_path}" \
+            | tr "\n" " ")
+          echo "# diffs: ${diffs}"
+          echo "DIFFS=${diffs}" >> $GITHUB_OUTPUT
+      - id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 1.29.58
+          arch: amd64    
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: generate pr description
+        env: 
+          S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
+          DIFFS: ${{ steps.git-diff.outputs.DIFFS }}
+        run: |
+          aws bedrock-runtime invoke-model \
+          --model-id anthropic.claude-v2 \
+          --body "{\"prompt\": \"\n\nHuman:以下の【】内のgitのdiffを見て、【${DIFFS}】 プルリクエストのdescriptionをそのまま貼れる文言で作成して。サンプルとなる出力は[]内のテキストを参照してね。[## やったこと\n\n* このプルリクで何をしたのか？\n\n## やらないこと\n\n* このプルリクでやらないことは何か？（あれば。無いなら「無し」でOK）（やらない場合は、いつやるのかを明記する。）\n\n## できるようになること（ユーザ目線）\n\n* 何ができるようになるのか？（あれば。無いなら「無し」でOK）\n\n## できなくなること（ユーザ目線）\n\n* 何ができなくなるのか？（あれば。無いなら「無し」でOK）\n\n## 動作確認\n\n* レビュワーへの参考情報] \n\nAssistant:\", \"max_tokens_to_sample\":300}" invoke-model-output.txt
+      - name: cat invoke-model-output.txt
+        id: invoke-model-output
+        env: 
+          S3_DOWNLOAD_BUCKET: ${{ secrets.S3_DOWNLOAD_BUCKET }}
+        run: |
+          cat invoke-model-output.txt
+          description=$(cat invoke-model-output.txt | jq -r .completion)
+          
+          echo  'DESCRIPTION<<EOF'  >> "$GITHUB_OUTPUT"
+          echo "${description}"  >> "$GITHUB_OUTPUT"
+          echo 'EOF' >> "$GITHUB_OUTPUT"
+
+      - name: URL to Pull Request description
+        env:
+          DESCRIPTION: ${{ steps.invoke-model-output.outputs.DESCRIPTION }}
+        run: |
+          DESCRIPTION_TEXT=$(echo $DESCRIPTION)
+          gh pr edit ${{ github.event.pull_request.number }} --body "${DESCRIPTION_TEXT}"
+           

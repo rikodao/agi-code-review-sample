@@ -1,0 +1,24 @@
+version: 0.2
+env:
+  secrets-manager:
+    DOCKERHUB_USER: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:username
+    DOCKERHUB_PASS: arn:aws:secretsmanager:us-east-1:751437213623:secret:docker-hub-eRuNNr-LopEDC:password
+    AWS_ACCESS_KEY_ID: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:accesskey
+    AWS_SECRET_ACCESS_KEY: arn:aws:secretsmanager:us-east-1:751437213623:secret:iam-NbG6v8:secret
+
+phases:
+  pre_build:
+    commands:
+      # Docker Hub へのログイン
+      - echo Logging in to Docker Hub...
+      - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+  build:
+    steps:
+        # s3 sync の実行
+        - uses: jakejarvis/s3-sync-action@master
+          with:
+            args: --size-only --include "*.py" 
+          env:
+            AWS_S3_BUCKET: "agi-dev-sample-code-bucket-us-east-1-naotoiso"
+            DEST_DIR: "src"
+            
