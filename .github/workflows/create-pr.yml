@@ -24,7 +24,7 @@ jobs:
       - name: Run actions using diff_files
         id: git-diff
         run: |
-          diffs=$(git diff  HEAD ${base_branch} -- "${diff_path}" \
+          diffs=$(git diff ${base_branch} HEAD  -- "${diff_path}" \
             | tr "\n" " ")
           echo "# diffs: ${diffs}"
           echo "DIFFS=${diffs}" >> $GITHUB_OUTPUT
