@@ -71,3 +71,30 @@ def sendSNSTopicMessage(message):
       TopicArn=topic_arn,    
       Message=json.dumps(Message)
      )
+     
+def get_all_keys(bucket, prefix, keys, marker, recursive):
+    s3 = boto3.client('s3')
+    if recursive:
+        response = s3.list_objects(
+            Bucket=bucket, Prefix=prefix, Marker=marker)
+    else:
+        response = s3.list_objects(
+            Bucket=bucket, Prefix=prefix, Marker=marker, Delimiter='/')
+
+    if keys is None:
+        keys = []
+
+    if 'CommonPrefixes' in response:
+        keys.extend([content['Prefix']
+                    for content in response['CommonPrefixes']])
+    if 'Contents' in response:  
+        keys.extend([content['Key'] for content in response['Contents']])
+        if 'IsTruncated' in response:
+            return get_all_keys(bucket=bucket, prefix=prefix, keys=keys, marker=keys[-1], recursive=recursive)
+    return keys
+    
+def ls(bucket, prefix, recursive):
+    paths = []
+    paths = get_all_keys(
+        bucket, prefix, recursive=recursive)
+    return paths
