@@ -24,7 +24,7 @@ def lambda_handler(event, context):
 def prehookForDebug(event, context):
     print('botocore vertion: {0}'.format(botocore.__version__))
     print('boto3 vertion: {0}'.format(boto3.__version__))
-    print("Received event: " + json.dumps(event, indent=2))
+    print('Received event: ' + json.dumps(event, indent=2))
 
 # オブジェクトのボディ(中身)を文字列として取得
 def getCode(bucket, key):
@@ -45,10 +45,10 @@ def codeReviewWithBedrock(code):
         return '\n\nHuman:以下のLambda上で動くPythonで書かれたプログラムのコードを、[変数名の適切さ]、[リファクタリングの余地]、[バグの有無]、[エラーハンドリングの正しさ]の観点で、10年来の友達として関西弁で正直にレビューしてな。\n' + text + '\n\nAssistant:'
     
     body = json.dumps({
-        "prompt": prompt(code),
-        "max_tokens_to_sample": 8191,
-        "temperature": 0.1,
-        "top_p": 0.9,
+        'prompt': prompt(code),
+        'max_tokens_to_sample': 8191,
+        'temperature': 0.1,
+        'top_p': 0.9,
     })
 
     # APIレスポンスからBODYを取り出す
@@ -57,7 +57,7 @@ def codeReviewWithBedrock(code):
     # text
     print(response_body)
     
-    completion = response_body.get("completion")
+    completion = response_body.get('completion')
     return completion
 
 def sendSNSTopicMessage(message):
@@ -65,7 +65,7 @@ def sendSNSTopicMessage(message):
     sns = boto3.client('sns')
 
     topic_arn = 'arn:aws:sns:us-east-1:751437213623:test' 
-    Message = {"version": "1.0","source": "custom","content": {"description": message}}
+    Message = {'version': '1.0','source': 'custom','content': {'description': message}}
     
     response = sns.publish(
       TopicArn=topic_arn,    
