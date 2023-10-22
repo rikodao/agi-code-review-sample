@@ -46,7 +46,7 @@ jobs:
         run: |
           aws bedrock-runtime invoke-model \
           --model-id anthropic.claude-v2 \
-          --body "{\"prompt\": \"\n\nHuman:以下の【】内のgitのdiffを見て、【${DIFFS}】 プルリクエストのdescriptionをそのまま貼れる文言で作成して。サンプルとなる出力は[]内のテキストを参照してね。[## やったこと\n\n* このプルリクで何をしたのか？\n\n## やらないこと\n\n* このプルリクでやらないことは何か？（あれば。無いなら「無し」でOK）（やらない場合は、いつやるのかを明記する。）\n\n## できるようになること（ユーザ目線）\n\n* 何ができるようになるのか？（あれば。無いなら「無し」でOK）\n\n## できなくなること（ユーザ目線）\n\n* 何ができなくなるのか？（あれば。無いなら「無し」でOK）\n\n## 動作確認\n\n* レビュワーへの参考情報] \n\nAssistant:\", \"max_tokens_to_sample\":300}" invoke-model-output.txt
+          --body "{\"prompt\": \"\n\nHuman:以下の【】内のgitのdiffを見て、【${DIFFS}】 プルリクエストのdescriptionをそのまま貼れる文言で作成して。サンプルとなる出力は[]内のテキストを参照してね。[## やったこと\n\n* このプルリクで何をしたのか？\n\n## やらないこと\n\n* このプルリクでやらないことは何か？（あれば。無いなら「無し」でOK）（やらない場合は、いつやるのかを明記する。）\n\n## できるようになること（ユーザ目線）\n\n* 何ができるようになるのか？（あれば。無いなら「無し」でOK）\n\n## できなくなること（ユーザ目線）\n\n* 何ができなくなるのか？（あれば。無いなら「無し」でOK）\n\n## 動作確認\n\n* レビュワーへの参考情報] \n\nAssistant:\", \"max_tokens_to_sample\":1000}" invoke-model-output.txt
       - name: cat invoke-model-output.txt
         id: invoke-model-output
         env: 
