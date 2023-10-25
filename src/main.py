@@ -73,3 +73,56 @@ def sendSNSTopicMessage(message):
       TopicArn=topic_arn,    
       Message=json.dumps(Message)
      )
+
+# Function to Upload file to S3 Bucket
+def upload_file_to_s3(file_name, bucket, object_name=None):
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = file_name
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
+
+# Function to list S3 Bucket
+def list_files_in_s3_bucket(bucket):
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.list_objects(Bucket=bucket)
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return response['Contents']
+    
+
+def get_all_keys(bucket, prefix, keys, marker, recursive):
+    s3 = boto3.client('s3')
+    if recursive:
+        response = s3.list_objects(
+            Bucket=bucket, Prefix=prefix, Marker=marker)
+    else:
+        response = s3.list_objects(
+            Bucket=bucket, Prefix=prefix, Marker=marker, Delimiter='/')
+
+    if keys is None:
+        keys = []
+
+    if 'CommonPrefixes' in response:
+        keys.extend([content['Prefix']
+                    for content in response['CommonPrefixes']])
+    if 'Contents' in response:  
+        keys.extend([content['Key'] for content in response['Contents']])
+        if 'IsTruncated' in response:
+            return get_all_keys(bucket=bucket, prefix=prefix, keys=keys, marker=keys[-1], recursive=recursive)
+    return keys
+    
+def ls(bucket, prefix, recursive):
+    paths = []
+    paths = get_all_keys(
+        bucket, prefix, recursive=recursive)
+    return paths
