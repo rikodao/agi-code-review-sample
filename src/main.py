@@ -2,6 +2,8 @@ import boto3
 import botocore
 import urllib
 import json
+ClientError = botocore.exceptions.ClientError
+import logging
 
 s3 = boto3.client('s3')
 
