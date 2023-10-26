@@ -79,3 +79,4 @@ def list_s3_objects(bucket):
     s3_client = boto3.client('s3')
     response = s3_client.list_objects_v2(Bucket=bucket)
     return response['Contents']
+    
